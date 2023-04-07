@@ -1,7 +1,7 @@
 #ifndef __PRODUCT_ITERATOR_IMPL_HPP__
 #define __PRODUCT_ITERATOR_IMPL_HPP__
 
-#include "iterator.hpp"
+#include "iterator_proxy.hpp"
 
 namespace cartesian_product {
 

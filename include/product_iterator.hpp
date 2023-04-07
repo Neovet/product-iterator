@@ -143,6 +143,6 @@ make_iterator(Containers const&... containers) {
 
 }
 
-#include "iterator_impl.hpp"
+#include "product_iterator_impl.hpp"
 
 #endif
