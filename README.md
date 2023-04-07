@@ -26,14 +26,14 @@ and an alternative (and more preferable) method `it.get<N>()` is provided.
 The iterator also provides a method `get_end()`, which returns the end iterator
 associated with the containers used during construction.
 
-A helper function `make_product_iterator` is provided to create the
+A helper function `make_iterator` is provided to create the
 iterator.
 
 Example of use:
 ```
 vector<int> c1({1,2});
 vector<char> c2({'a','b'});
-auto it = make_product_iterator(c1, c2);
+auto it = make_iterator(c1, c2);
 auto end = it.get_end();
 for (; it != end; ++it) {
   // Provides a std::tuple<int,char> with the values from the constructor

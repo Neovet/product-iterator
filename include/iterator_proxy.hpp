@@ -1,7 +1,7 @@
 // This file defines a fake container that is only defined by a pair of
 // iterators.
 //
-// The product_iterator is only able to accept containers to simplify the
+// The iterator is only able to accept containers to simplify the
 // building process, as it would be necessary to detect if a given argument is a
 // container or an iterator. However, since only containers are allowed,
 // iterator-only sequences, such as those defined by boost::couting_iterator
@@ -23,6 +23,8 @@
 #define __ITERATOR_PROXY_HPP__
 
 #include <cstddef>
+
+namespace cartesian_product {
 
 template <class It>
 class iterator_proxy {
@@ -54,6 +56,8 @@ class iterator_proxy {
 template <class It>
 iterator_proxy<It> make_iterator_proxy(It const& begin, It const& end) {
   return iterator_proxy<It>(begin, end);
+}
+
 }
 
 #endif

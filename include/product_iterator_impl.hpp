@@ -1,15 +1,17 @@
 #ifndef __PRODUCT_ITERATOR_IMPL_HPP__
 #define __PRODUCT_ITERATOR_IMPL_HPP__
 
-#include "product_iterator.hpp"
+#include "iterator.hpp"
+
+namespace cartesian_product {
 
 template <class... Containers>
-product_iterator<Containers...>::product_iterator():
+iterator<Containers...>::iterator():
   current_tuple_(nullptr) { }
 
 template <class... Containers>
-product_iterator<Containers...>::product_iterator(
-    product_iterator const& other):
+iterator<Containers...>::iterator(
+    iterator const& other):
   current_tuple_(nullptr) {
     begin_ = other.begin_;
     end_ = other.end_;
@@ -17,21 +19,21 @@ product_iterator<Containers...>::product_iterator(
 }
 
 template <class... Containers>
-product_iterator<Containers...>::product_iterator(
+iterator<Containers...>::iterator(
     Containers const&... containers):
   current_tuple_(nullptr) {
     copy_iterator<0>(containers...);
 }
 
 template <class... Containers>
-product_iterator<Containers...>::~product_iterator() {
+iterator<Containers...>::~iterator() {
   if (current_tuple_ != nullptr)
     delete current_tuple_;
 }
 
 template <class... Containers>
-product_iterator<Containers...> const&
-product_iterator<Containers...>::operator=(product_iterator const& other) {
+iterator<Containers...> const&
+iterator<Containers...>::operator=(iterator const& other) {
   if (current_tuple_ != nullptr) {
     delete current_tuple_;
     current_tuple_ = nullptr;
@@ -44,9 +46,9 @@ product_iterator<Containers...>::operator=(product_iterator const& other) {
 }
 
 template <class... Containers>
-product_iterator<Containers...>
-product_iterator<Containers...>::get_end() const {
-  product_iterator<Containers...> ret(*this);
+iterator<Containers...>
+iterator<Containers...>::get_end() const {
+  iterator<Containers...> ret(*this);
   ret.current_ = begin_;
   std::get<0>(ret.current_) = std::get<0>(ret.end_);
   return ret;
@@ -54,7 +56,7 @@ product_iterator<Containers...>::get_end() const {
 
 template <class... Containers>
 template <size_t I, class T1, class... Types>
-void product_iterator<Containers...>::copy_iterator(T1 const& container,
+void iterator<Containers...>::copy_iterator(T1 const& container,
     Types const&... containers) {
   std::get<I>(current_) = container.cbegin();
   std::get<I>(begin_) = container.cbegin();
@@ -64,14 +66,14 @@ void product_iterator<Containers...>::copy_iterator(T1 const& container,
 
 template <class... Containers>
 template <size_t I, class T1>
-void product_iterator<Containers...>::copy_iterator(T1 const& container) {
+void iterator<Containers...>::copy_iterator(T1 const& container) {
   std::get<I>(current_) = container.cbegin();
   std::get<I>(begin_) = container.cbegin();
   std::get<I>(end_) = container.cend();
 }
 
 template <class... Containers>
-void product_iterator<Containers...>::increment() {
+void iterator<Containers...>::increment() {
   // Avoids incrementing if we have already reached the end.
   if (std::get<0>(current_) == std::get<0>(end_))
     return;
@@ -85,14 +87,14 @@ void product_iterator<Containers...>::increment() {
 }
 
 template <class... Containers>
-bool product_iterator<Containers...>::equal(
-    product_iterator<Containers...> const& other) const {
+bool iterator<Containers...>::equal(
+    iterator<Containers...> const& other) const {
   return current_ == other.current_;
 }
 
 template <class... Containers>
-typename product_iterator<Containers...>::value_type const&
-product_iterator<Containers...>::dereference() const {
+typename iterator<Containers...>::value_type const&
+iterator<Containers...>::dereference() const {
   if (current_tuple_ == nullptr)
     current_tuple_ = new value_type(make_value_type(
           typename tuple_sequence_generator<value_type>::type()));
@@ -101,20 +103,20 @@ product_iterator<Containers...>::dereference() const {
 
 template <class... Containers>
 template <size_t... S>
-typename product_iterator<Containers...>::value_type
-product_iterator<Containers...>::make_value_type(sequence<S...>) const {
+typename iterator<Containers...>::value_type
+iterator<Containers...>::make_value_type(sequence<S...>) const {
   return value_type(*std::get<S>(this->current_)...);
 }
 
 template <class... Containers>
 template <size_t I>
-void product_iterator<Containers...>::advance(
+void iterator<Containers...>::advance(
     typename std::enable_if<(I == 0), int>::type) {
 }
 
 template <class... Containers>
 template <size_t I>
-void product_iterator<Containers...>::advance(
+void iterator<Containers...>::advance(
     typename std::enable_if<(I > 0), int>::type) {
   ++std::get<I-1>(current_);
 
@@ -125,6 +127,8 @@ void product_iterator<Containers...>::advance(
     std::get<I-1>(current_) = std::get<I-1>(begin_);
     advance<I-1>();
   }
+}
+
 }
 
 #endif

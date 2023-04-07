@@ -1,4 +1,4 @@
-#include "product_iterator.hpp"
+#include "iterator.hpp"
 #include "iterator_proxy.hpp"
 
 #include <gtest/gtest.h>
@@ -22,7 +22,7 @@ class ProductIteratorTest: public ::testing::Test {
 };
 
 TEST_F(ProductIteratorTest, Assignment) {
-  auto it = make_product_iterator(v1, v2);
+  auto it = make_iterator(v1, v2);
   *it;
   {
     decltype(it) it2;
@@ -31,7 +31,7 @@ TEST_F(ProductIteratorTest, Assignment) {
 }
 
 TEST_F(ProductIteratorTest, CopyConstructor) {
-  auto it = make_product_iterator(v1, v2);
+  auto it = make_iterator(v1, v2);
   *it;
   {
     decltype(it) it2(it);
@@ -39,7 +39,7 @@ TEST_F(ProductIteratorTest, CopyConstructor) {
 }
 
 TEST_F(ProductIteratorTest, DoubleLoop) {
-  auto it = make_product_iterator(v1, v2);
+  auto it = make_iterator(v1, v2);
   auto end = it.get_end();
 
   for (int i = min_i; i <= max_i; i++) {
@@ -56,7 +56,7 @@ TEST_F(ProductIteratorTest, DoubleLoop) {
 }
 
 TEST_F(ProductIteratorTest, DoubleLoopProxy) {
-  auto it = make_product_iterator(make_iterator_proxy(v1.begin(), v1.end()),
+  auto it = make_iterator(make_iterator_proxy(v1.begin(), v1.end()),
         make_iterator_proxy(v2.begin(), v2.end()));
   auto end = it.get_end();
 
@@ -78,7 +78,7 @@ TEST_F(ProductIteratorTest, BoolVector)
 	const std::vector<bool> v1 = { true, false };
 	const std::vector<bool> v2 = { true };
 
-	auto it = make_product_iterator( v1, v2 );
+	auto it = make_iterator( v1, v2 );
 	const auto end = it.get_end();
 
 	EXPECT_TRUE( it.get<0>() );

@@ -12,7 +12,7 @@
 // Example:
 // vector<int> c1({1,2});
 // vector<char> c2({'a','b'});
-// auto it = make_product_iterator(c1, c2);
+// auto it = make_iterator(c1, c2);
 // auto end = it.get_end();
 // for (; it != end; ++it) {
 //   // Provides a std::tuple<int,char> with the values from the constructor
@@ -29,10 +29,12 @@
 #include <tuple>
 #include <type_traits>
 
+namespace cartesian_product {
+
 template <class... Containers>
-class product_iterator:
+class iterator:
   public boost::iterator_facade<
-    product_iterator<Containers...>,
+    iterator<Containers...>,
     std::tuple<
       typename std::remove_reference<
         typename Containers::value_type
@@ -66,18 +68,18 @@ class product_iterator:
       };
 
     public:
-      product_iterator();
+      iterator();
 
-      product_iterator(product_iterator const& other);
+      iterator(iterator const& other);
 
-      product_iterator(Containers const&... containers);
+      iterator(Containers const&... containers);
 
-      ~product_iterator();
+      ~iterator();
 
-      product_iterator const& operator=(product_iterator const& other);
+      iterator const& operator=(iterator const& other);
 
       // Gets the end iterator to be compared
-      product_iterator<Containers...> get_end() const;
+      iterator<Containers...> get_end() const;
 
       // See public get() member bellow private section
 
@@ -85,7 +87,7 @@ class product_iterator:
       // Boost stuff due to facade
       friend class boost::iterator_core_access;
       void increment();
-      bool equal(product_iterator<Containers...> const& other) const;
+      bool equal(iterator<Containers...> const& other) const;
       value_type const& dereference() const;
 
       // Helper method to dereference. Just get references from each iterator
@@ -134,11 +136,13 @@ class product_iterator:
 };
 
 template <class... Containers>
-product_iterator<Containers...>
-make_product_iterator(Containers const&... containers) {
-  return product_iterator<Containers...>(containers...);
+iterator<Containers...>
+make_iterator(Containers const&... containers) {
+  return iterator<Containers...>(containers...);
 }
 
-#include "product_iterator_impl.hpp"
+}
+
+#include "iterator_impl.hpp"
 
 #endif
