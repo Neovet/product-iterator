@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.22)
 project(product-iterator CXX)
 
-include(CTest)
-find_package(GTest REQUIRED)
+option(ENABLE_TESTS "Enable tests" OFF)
+
+if(ENABLE_TESTS)
+  include(CTest)
+  find_package(GTest REQUIRED)
+endif()
 
 include_directories(include)
 
@@ -17,4 +21,6 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-add_subdirectory(test)
+if(ENABLE_TESTS)
+  add_subdirectory(test)
+endif()
